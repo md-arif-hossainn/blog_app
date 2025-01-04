@@ -1,5 +1,6 @@
 import 'package:blog_app/core/error/exceptions.dart';
 import 'package:blog_app/core/error/failures.dart';
+import 'package:blog_app/domain/entities/user.dart';
 import 'package:blog_app/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -7,11 +8,12 @@ import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
- // final ConnectionChecker connectionChecker;
+
+  // final ConnectionChecker connectionChecker;
   const AuthRepositoryImpl(
-      this.remoteDataSource,
-  //    this.connectionChecker,
-      );
+    this.remoteDataSource,
+    //    this.connectionChecker,
+  );
 
   // @override
   // Future<Either<Failure, User>> currentUser() async {
@@ -42,52 +44,61 @@ class AuthRepositoryImpl implements AuthRepository {
   //   }
   // }
 
-
-
   @override
-  Future<Either<Failure, String>> signUpWithEmailPassword({
+  Future<Either<Failure, User>> signUpWithEmailPassword({
     required String name,
     required String email,
     required String password,
   }) async {
-    // return _getUser(
-    //       () async => await remoteDataSource.signUpWithEmailPassword(
+    // try {
+    //   final user = await remoteDataSource.signUpWithEmailPassword(
     //     name: name,
     //     email: email,
     //     password: password,
-    //   ),
-    // );
-    
-    try{
-    final userId =  await remoteDataSource.signUpWithEmailPassword(
-          name: name,
-          email: email,
-          password: password,
-        );
-    return right(userId);
-    } on ServerException catch (e){
+    //   );
+    //   return right(user);
+    // } on ServerException catch (e) {
+    //   return left(Failure(e.message));
+    // }
+
+      return _getUser(
+            () async => remoteDataSource.signUpWithEmailPassword(
+        name: name,
+        email: email,
+        password: password,
+        ),
+      );
+  }
+
+  @override
+  Future<Either<Failure, User>> loginWithEmailPassword(
+      {required String email, required String password}) async {
+    // try {
+    //   final user = await remoteDataSource.loginWithEmailPassword(
+    //       email: email, password: password);
+    //   return right(user);
+    // } on ServerException catch (e) {
+    //   return left(Failure(e.message));
+    // }
+
+    return _getUser(
+          () async => await remoteDataSource.loginWithEmailPassword(
+        email: email,
+        password: password,
+      ),
+    );
+  }
+
+
+  Future<Either<Failure, User>> _getUser(
+      Future<User> Function() fn,
+      ) async {
+    try {
+      final user = await fn();
+      return right(user);
+    } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
 
-  @override
-  Future<Either<Failure, String>> loginWithEmailPassword({required String email, required String password}) {
-    // TODO: implement loginWithEmailPassword
-    throw UnimplementedError();
-  }
-  //
-  // Future<Either<Failure, User>> _getUser(
-  //     Future<User> Function() fn,
-  //     ) async {
-  //   try {
-  //     if (!await (connectionChecker.isConnected)) {
-  //       return left(Failure(Constants.noConnectionErrorMessage));
-  //     }
-  //     final user = await fn();
-  //
-  //     return right(user);
-  //   } on ServerException catch (e) {
-  //     return left(Failure(e.message));
-  //   }
-  // }
 }
