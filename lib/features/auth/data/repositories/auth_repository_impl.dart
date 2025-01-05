@@ -15,34 +15,24 @@ class AuthRepositoryImpl implements AuthRepository {
     //    this.connectionChecker,
   );
 
-  // @override
-  // Future<Either<Failure, User>> currentUser() async {
-  //   try {
-  //     if (!await (connectionChecker.isConnected)) {
-  //       final session = remoteDataSource.currentUserSession;
-  //
-  //       if (session == null) {
-  //         return left(Failure('User not logged in!'));
-  //       }
-  //
-  //       return right(
-  //         UserModel(
-  //           id: session.user.id,
-  //           email: session.user.email ?? '',
-  //           name: '',
-  //         ),
-  //       );
-  //     }
-  //     final user = await remoteDataSource.getCurrentUserData();
-  //     if (user == null) {
-  //       return left(Failure('User not logged in!'));
-  //     }
-  //
-  //     return right(user);
-  //   } on ServerException catch (e) {
-  //     return left(Failure(e.message));
-  //   }
-  // }
+  @override
+  Future<Either<Failure, User>> currentUser() async {
+    try {
+        // final session = await remoteDataSource.currentUserSession;
+        // if (session == null) {
+        //   return left(Failure('User not logged in!'));
+        // }
+        //
+        // return right(session);
+      final user = await remoteDataSource.getCurrentUserData();
+      if (user == null) {
+        return left(Failure('User not logged in!'));
+      }
+      return right(user);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, User>> signUpWithEmailPassword({
