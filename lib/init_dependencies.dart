@@ -1,5 +1,6 @@
 
 
+import 'package:blog_app/features/auth/data/usecases/current_user.dart';
 import 'package:blog_app/features/auth/data/usecases/user_login.dart';
 import 'package:blog_app/presentation/bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -28,37 +29,44 @@ Future<void> initDependencies() async {
 
 void _initAuth() {
   // Datasource
-  serviceLocator.registerFactory<AuthRemoteDataSource>(
+  serviceLocator
+    ..registerFactory<AuthRemoteDataSource>(
           () => AuthRemoteDataSourceImpl(
         serviceLocator(),
       ),
-    );
+    )
 
   // Repository
-  serviceLocator.registerFactory<AuthRepository>(
+  ..registerFactory<AuthRepository>(
           () => AuthRepositoryImpl(
         serviceLocator(),
       ),
-    );
+    )
 
   // Usecases
-  serviceLocator.registerFactory(
+  ..registerFactory(
           () => UserSignUp(
         serviceLocator(),
       ),
-    );
+    )
 
-  serviceLocator.registerFactory(
+  ..registerFactory(
         () => UserLogin(
       serviceLocator(),
     ),
-  );
+  )
+    ..registerFactory(
+          () => CurrentUser(
+        serviceLocator(),
+      ),
+    )
 
   // Bloc
-  serviceLocator.registerLazySingleton(
+ ..registerLazySingleton(
           () => AuthBloc(
         userSignUp: serviceLocator(),
         userLogin: serviceLocator(),
+        currentUser: serviceLocator(),
       ),
     );
 
