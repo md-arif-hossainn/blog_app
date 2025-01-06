@@ -1,12 +1,12 @@
 
 
 
-import 'package:blog_app/domain/entities/user.dart';
 import 'package:fpdart/fpdart.dart';
 
+import '../../../../core/entities/user.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../../../../domain/repository/auth_repository.dart';
+import '../../domain/repository/auth_repository.dart';
 
 class UserSignUp implements UseCase<User, UserSignUpParams> {
   final AuthRepository authRepository;
