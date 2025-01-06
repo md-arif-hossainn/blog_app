@@ -1,9 +1,9 @@
 
 
 
-import 'package:blog_app/domain/entities/user.dart';
 
-import '../../core/error/failures.dart';
+import '../../../../core/entities/user.dart';
+import '../../../../core/error/failures.dart';
 import 'package:fpdart/fpdart.dart';
 
 
