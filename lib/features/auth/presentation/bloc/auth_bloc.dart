@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/common/cubits/app_user_cubit.dart';
 import '../../../../core/entities/user.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../../data/usecases/current_user.dart';
-import '../../data/usecases/user_login.dart';
-import '../../data/usecases/user_sign_up.dart';
+import '../../domain/usecases/current_user.dart';
+import '../../domain/usecases/user_login.dart';
+import '../../domain/usecases/user_sign_up.dart';
 
 
 part 'auth_event.dart';
