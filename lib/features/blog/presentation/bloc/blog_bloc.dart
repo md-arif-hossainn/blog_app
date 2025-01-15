@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/usecase/usecase.dart';
+import '../../domain/entities/blog.dart';
+import '../../domain/usecase/get_all_blogs.dart';
 import '../../domain/usecase/uoload_blog.dart';
 
 
@@ -11,13 +14,21 @@ part 'blog_state.dart';
 
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   final UploadBlog _uploadBlog;
+  final GetAllBlogs _getAllBlogs;
+
 
   BlogBloc({
     required UploadBlog uploadBlog,
+    required GetAllBlogs getAllBlogs,
+
   })  : _uploadBlog = uploadBlog,
-        super(BlogInitial()) {
+        _getAllBlogs = getAllBlogs,
+
+      super(BlogInitial()) {
     on<BlogEvent>((event, emit) => emit(BlogLoading()));
     on<BlogUpload>(_onBlogUpload);
+    on<BlogFetchAllBlogs>(_onFetchAllBlogs);
+
   }
 
   void _onBlogUpload(
@@ -39,4 +50,17 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
       (r) => emit(BlogUploadSuccess()),
     );
   }
+
+  void _onFetchAllBlogs(
+      BlogFetchAllBlogs event,
+      Emitter<BlogState> emit,
+      ) async {
+    final res = await _getAllBlogs(NoParams());
+
+    res.fold(
+          (l) => emit(BlogFailure(l.message)),
+          (r) => emit(BlogsDisplaySuccess(r)),
+    );
+  }
+
 }
